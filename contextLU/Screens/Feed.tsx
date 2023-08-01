@@ -1,14 +1,15 @@
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {SignedTabNavigator} from '../navigators/SignedNavigator';
+// import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+// import {SignedTabNavigator} from '../navigators/SignedNavigator';
+import PostsList from '../PostsList';
 
-type Props = BottomTabScreenProps<SignedTabNavigator, 'feed'>;
+// type Props = BottomTabScreenProps<SignedTabNavigator, 'feed'>;
 
-const Feed = ({route}: Props) => {
+const Feed = () => {
   return (
     <View>
-      <Text>{route.params?.username} Feed</Text>
+      <PostsList />
     </View>
   );
 };

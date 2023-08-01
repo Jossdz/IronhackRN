@@ -1,4 +1,5 @@
-import React, {createContext, useReducer, useContext} from 'react';
+import React, {createContext, useReducer, useContext, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type User = {
   username: string;
@@ -38,16 +39,41 @@ const appReducer = (state: ReducerState, action: Action): ReducerState => {
   }
 };
 
+async function savePersistentData(key: string, value: string) {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function getPersistentData(key: string) {
+  try {
+    const data = await AsyncStorage.getItem(key);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const AppCtxProvider = ({...props}) => {
   const [{user}, dispatch] = useReducer(appReducer, initialReducerValue);
 
   const login = (username: string) => {
+    savePersistentData('username', username);
     dispatch({type: 'login', payload: {username}});
   };
+
   const logout = () => {
     dispatch({type: 'logout'});
   };
 
+  useEffect(() => {
+    getPersistentData('username').then(userData => {
+      if (userData) {
+        dispatch({type: 'login', payload: {username: userData}});
+      }
+    });
+  }, []);
   const value = {user, login, logout};
 
   return <AppCtx.Provider {...props} value={value} />;

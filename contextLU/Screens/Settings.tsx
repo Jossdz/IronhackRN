@@ -1,12 +1,18 @@
-import {Button, StyleSheet, View} from 'react-native';
-import React from 'react';
-import {useAppCtx} from '../hooks/context';
+import {Button, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {getPersistentData, useAppCtx} from '../hooks/context';
 
 const Settings = () => {
   const {logout} = useAppCtx();
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    getPersistentData('username').then(user => setUsername(user || ''));
+  }, []);
 
   return (
     <View style={styles.main}>
+      {typeof username === 'string' && <Text>{username}</Text>}
       <Button title="Logout" onPress={logout} />
     </View>
   );
